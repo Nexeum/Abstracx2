@@ -68,47 +68,6 @@ def login():
     except Exception as e:
         return jsonify({'error': 'Login failed', 'message': str(e)}), 500
 
-@app.route('/runs', methods=['GET'])
-@cross_origin()
-def get_runs():
-    try:
-        status = request.args.get('status')
-        with db.cursor() as cur:
-            query = """
-                SELECT r.rid, t.teamname, p.name, r.language, r.time, r.result, r.access
-                FROM runs r
-                INNER JOIN teams t ON r.tid = t.tid
-                INNER JOIN problems p ON r.pid = p.pid
-                WHERE r.access != 'deleted' AND (t.status = 'Normal' OR t.status = 'Admin')
-                AND (p.status = 'Active' OR (%s = 'Admin' AND p.status != 'Delete'))
-                ORDER BY r.rid DESC
-            """
-            cur.execute(query, (status,))
-            column_names = [desc[0] for desc in cur.description]
-            rows = cur.fetchall()
-            runs = [dict(zip(column_names, row)) for row in rows]
-            return jsonify({'runs': runs})
-    except pymysql.Error as sql_error:
-        return jsonify({'error': 'Database error', 'message': str(sql_error)}), 500
-    except Exception as e:
-        return jsonify({'error': 'Failed to fetch runs', 'message': str(e)}), 500
-
-@app.route('/groups', methods=['GET'])
-@cross_origin()
-def get_groups():
-    try:
-        with db.cursor() as cur:
-            query = "SELECT * FROM groups WHERE statusx < 2"
-            cur.execute(query)
-            column_names = [desc[0] for desc in cur.description]
-            rows = cur.fetchall()
-            groups = [dict(zip(column_names, row)) for row in rows]
-            return jsonify({'groups': groups})
-    except pymysql.Error as sql_error:
-        return jsonify({'error': 'Database error', 'message': str(sql_error)}), 500
-    except Exception as e:
-        return jsonify({'error': 'Failed to fetch groups', 'message': str(e)}), 500
-
 @app.route('/user', methods=['GET'])
 @cross_origin()
 def get_user_data():
@@ -150,39 +109,6 @@ def get_user_data():
         return jsonify({'error': 'Invalid token', 'message': 'Log in again'}), 401
     except Exception as e:
         return jsonify({'error': 'Failed to get user data', 'message': str(e)}), 500
-
-@app.route('/problems', methods=['GET'])
-@cross_origin()
-def get_problems():
-    try:
-        with db.cursor() as cur:
-            cur.execute("SELECT pid, name, code, pgroup, type, score FROM problems WHERE status != 'Delete'")
-            column_names = [desc[0] for desc in cur.description]
-            problems = [dict(zip(column_names, row)) for row in cur.fetchall()]
-            return jsonify({'problems': problems})
-    except pymysql.Error as sql_error:
-        return jsonify({'error': 'Database error', 'message': str(sql_error)}), 500
-    except Exception as e:
-        return jsonify({'error': 'Failed to fetch problems', 'message': str(e)}), 500
-
-@app.route('/problem/<int:problem_id>', methods=['GET'])
-def get_problem_details(problem_id):
-    try:
-        with db.cursor() as cur:
-            cur.execute("SELECT * FROM problems WHERE pid = %s", (problem_id,))
-            row = cur.fetchone()
-
-            if row is not None:
-                column_names = [desc[0] for desc in cur.description]
-                problem_details = dict(zip(column_names, row))
-                return jsonify(problem_details)
-            else:
-                return jsonify({'error': 'Problem not found'}), 404
-
-    except pymysql.Error as sql_error:
-        return jsonify({'error': 'Database error', 'message': str(sql_error)}), 500
-    except Exception as e:
-        return jsonify({'error': 'Failed to fetch problem details', 'message': str(e)}), 500
     
 @app.route('/change-password', methods=['POST'])
 @cross_origin()
@@ -225,66 +151,6 @@ def change_password():
         return jsonify({'error': 'Database error', 'message': str(sql_error)}), 500
     except Exception as e:
         return jsonify({'error': 'Password change failed', 'message': str(e)}), 500
-    
-@app.route('/team-details', methods=['GET'])
-@cross_origin()
-def get_team_details():
-    try:
-        token = request.headers.get('Authorization')
-        if not token:
-            return jsonify({'error': 'Token not provided', 'message': 'A token is required'}), 401
-        
-        if token.startswith('Bearer '):
-            token = token.split(' ')[1]
-
-        payload = verify_token(token)
-        user_id = payload.get('user_id')
-    
-        with db.cursor() as cur:
-            query = "SELECT * FROM Teams where tid = %s"
-            cur.execute(query, (user_id,))
-            column_names = [desc[0] for desc in cur.description]
-            team_details = [dict(zip(column_names, row)) for row in cur.fetchall()]
-            return jsonify({'team_details': team_details})
-    except pymysql.Error as sql_error:
-        return jsonify({'error': 'Database error', 'message': str(sql_error)}), 500
-    except Exception as e:
-        return jsonify({'error': 'Failed to fetch team details', 'message': str(e)}), 500
-
-@app.route('/status', methods=['GET'])
-@cross_origin()
-def get_status():
-    if db.open:
-        status = "UP"
-    else:
-        status = "DOWN"
-
-    status_data = {
-        "status": status,
-        "version": "abstracx-trunk.20231020.1"
-    }
-
-    return jsonify(status_data)
-
-@app.route('/admin', methods=['GET'])
-@cross_origin()
-def get_admin_data():
-    try:
-        with db.cursor() as cur:
-            cur.execute("SELECT value FROM admin WHERE variable = 'notice'")
-            row = cur.fetchone()
-
-            if row is not None:
-                notice = row[0]
-                return jsonify({'notice': notice})
-            else:
-                return jsonify({'error': 'Data not found'}), 404
-
-    except pymysql.Error as sql_error:
-        return jsonify({'error': 'Database error', 'message': str(sql_error)}), 500
-    except Exception as e:
-        return jsonify({'error': 'Failed to fetch admin details', 'message': str(e)}), 500
-
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(port=5000, debug=True)

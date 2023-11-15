@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-
+import { Table, Card} from "flowbite-react";
 export const Submissions = () => {
   const [runs, setRuns] = useState([]);
   const [token, setToken] = useState("");
@@ -11,7 +11,7 @@ export const Submissions = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/runs");
+        const response = await axios.get("http://localhost:5002/runs");
         setRuns(response.data.runs);
       } catch (error) {
         console.error(error);
@@ -67,49 +67,34 @@ export const Submissions = () => {
   const currentRuns = runs.slice(indexOfFirstRun, indexOfLastRun);
 
   return (
-    <div className="border border-gray-200 rounded-lg shadow">
-      <div className="relative overflow-x-auto">
+    <div className="flex flex-col justify-center items-center">
+      <Card href="#" className="w-full border-0">
         <h2 className="text-2xl font-bold mb-4 text-center p-4">
           Submission Status
         </h2>
         {runs ? (
           <div>
-            <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-              <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                <tr>
-                  <th scope="col" className="px-6 py-3">
-                    Run ID
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Team
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Problem
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Language
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Time
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Result
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Options
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
+            <Table>
+              <Table.Head>
+                <Table.HeadCell>Run ID</Table.HeadCell>
+                <Table.HeadCell>Team</Table.HeadCell>
+                <Table.HeadCell>Problem</Table.HeadCell>
+                <Table.HeadCell>Language</Table.HeadCell>
+                <Table.HeadCell>Time</Table.HeadCell>
+                <Table.HeadCell>Result</Table.HeadCell>
+                <Table.HeadCell>Options</Table.HeadCell>
+              </Table.Head>
+
+              <Table.Body>
                 {currentRuns.map((run) => (
-                  <tr key={run.rid} className="bg-white dark:bg-gray-800">
-                    <td className="px-6 py-4">{run.rid}</td>
-                    <td className="px-6 py-4">{run.teamname}</td>
-                    <td className="px-6 py-4">{run.name}</td>
-                    <td className="px-6 py-4">{run.language}</td>
-                    <td className="px-6 py-4">{run.time}</td>
-                    <td className="px-6 py-4">{resultMapping[run.result]}</td>
-                    <td className="px-6 py-4">
+                  <Table.Row key={run.rid} className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                    <Table.Cell>{run.rid}</Table.Cell>
+                    <Table.Cell>{run.teamname}</Table.Cell>
+                    <Table.Cell>{run.name}</Table.Cell>
+                    <Table.Cell>{run.language}</Table.Cell>
+                    <Table.Cell>{run.time}</Table.Cell>
+                    <Table.Cell>{resultMapping[run.result]}</Table.Cell>
+                    <Table.Cell>
                       {userData && userData.status === "Admin" ? (
                         <div>
                           <button
@@ -132,17 +117,15 @@ export const Submissions = () => {
                           </button>
                         </div>
                       ) : run.access !== "private" ? (
-                        <button className="text-white bg-blue-700 font-bold hover-bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover-bg-blue-700 focus:outline-none dark:focus-ring-blue-800">
-                          Code
+                        <button className="text-white bg-blue-700 font-bold hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                          View
                         </button>
-                      ) : (
-                        <span>No available code</span>
-                      )}
-                    </td>
-                  </tr>
+                      ) : null}
+                    </Table.Cell>
+                  </Table.Row>
                 ))}
-              </tbody>
-            </table>
+              </Table.Body>
+            </Table>
             <div className="flex items-center justify-center text-center p-4">
               <nav aria-label="Page navigation example">
                 <ul className="flex items-center -space-x-px h-8 text-sm">
@@ -175,11 +158,10 @@ export const Submissions = () => {
                       <li key={index}>
                         <button
                           onClick={() => handlePageChange(index + 1)}
-                          className={`flex items-center justify-center px-3 h-8 leading-tight ${
-                            currentPage === index + 1
+                          className={`flex items-center justify-center px-3 h-8 leading-tight ${currentPage === index + 1
                               ? "text-blue-600 border border-blue-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white"
                               : "text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                          }`}
+                            }`}
                         >
                           {index + 1}
                         </button>
@@ -256,7 +238,7 @@ export const Submissions = () => {
             <span className="sr-only">Loading...</span>
           </div>
         )}
-      </div>
+      </Card>
     </div>
   );
 };

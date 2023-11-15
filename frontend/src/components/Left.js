@@ -6,7 +6,7 @@ export const LeftComponent = () => {
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
   useEffect(() => {
-    axios.get("http://localhost:5000/problems")
+    axios.get("http://localhost:5003/problems")
       .then((response) => {
         setProblems(response.data.problems);
       })

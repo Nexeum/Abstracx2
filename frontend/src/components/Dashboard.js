@@ -5,7 +5,7 @@ export const Dashboard = () => {
   const [details, setDetails] = useState("");
 
   useEffect(() => {
-    axios.get("http://localhost:5000/admin")
+    axios.get("http://localhost:5006/admin")
       .then((response) => {
         setDetails(response.data.notice);
       })
@@ -22,7 +22,7 @@ export const Dashboard = () => {
   ));
 
   return (
-    <div className="w-full text-center bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
+    <div className="w-full text-center bg-white sm:p-8 dark:bg-gray-800 dark:border-gray-700">
       <h5 className="mb-2 text-3xl font-bold text-gray-900 dark:text-white">
         Important Notice
       </h5>

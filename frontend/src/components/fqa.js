@@ -1,9 +1,9 @@
 import React, { useState } from "react";
+import { Accordion } from "flowbite-react";
 
 export const FQA = () => {
   const accordionData = [
     {
-      id: "accordion-collapse-heading-1",
       title: "What is the Nexeum Online Judge?",
       content: `The Nexeum Online Judge is a Programming Contest Control System. 
       It acts as an interface between the judges and the participants of a Computer Programming Contest. 
@@ -14,7 +14,6 @@ export const FQA = () => {
       The judges testing is a Black box testing where the teams do not have access to the judges' test data.`,
     },
     {
-      id: "accordion-collapse-heading-2",
       title: "How does this website actually work?",
       content: `The Nexeum Online Judge System has three main parts: the SQL Database (which stores all information), 
       the User Interface (the website that you are currently using) and the Execution Protocol (the scripts that actually run the programs you submit). 
@@ -23,7 +22,6 @@ export const FQA = () => {
       The User Account system is implemented by Cookies (which are used to save information about whether you are currently logged in, and if so, more details about your team).`,
     },
     {
-      id: "accordion-collapse-heading-3",
       title: "What exactly is the Execution Protocol?",
       content: `Execution Protocol, as mentioned before, is a script that actually runs submitted programs and judges
       their correctness. The basic functioning of the Execution Protocol can be described as follows:
@@ -42,7 +40,6 @@ export const FQA = () => {
                     there is a match, return "Presentation Error", or else return "Wrong Answer".`,
     },
     {
-      id: "accordion-collapse-heading-4",
       title: "How do I participate here?",
       content: `The first thing you need to do it register your team using form given on the Registration Page. 
       Once you choose a unique team name and give details about the (1-3) members of your team, you need to wait until an Administrator authorizes your account (after verifying its authenticity). 
@@ -54,7 +51,6 @@ export const FQA = () => {
       Usually, clarifications can only been seen by the Administrators and team that requested it. However, if an Administrator thinks it is appropriate, he may make your question and his reply 'Public', thus allowing all teams to see it.`,
     },
     {
-      id: "accordion-collapse-heading-5",
       title: "What type of platform shall my codes be run on?",
       content: `To prevent malicious codes from harming the Execution Environment or the Server itself, submitted programs are executed on Virtual Machines. The configuration of the Virtual Machine being used right now is given below :
 
@@ -69,9 +65,8 @@ export const FQA = () => {
               Please contact an Administrator to request support for additional languages.`,
     },
     {
-      id: "accordion-collapse-heading-6",
       title:
-        "What type of platform shaCan you give an example of kind of the programs we can submit here?ll my codes be run on?",
+        "Can you give an example of kind of the programs we can submit here?ll my codes be run on?",
       content: `Please refer to and use the Squares Problem to test your choice of programming language. 
       Accepted solutions to this problem have also been made Public for educational reasons, and are available in the following languages : C, C++, C#, Java, Python, and Ruby. 
       Please remember that there is a 100KB limit on the size of the code you can submit.
@@ -81,7 +76,6 @@ export const FQA = () => {
       Sumbission of programs that do anything other than try to solve problems will result in severe consequences.`,
     },
     {
-      id: "accordion-collapse-heading-7",
       title: "Why is my program not being Accepted?",
       content: `The programs are judged by the Execution Protocol as described above. 
       However, there exist cases that haven't been dealt with, and some of which are mentioned below along with some common errors :
@@ -93,13 +87,11 @@ export const FQA = () => {
       If you are sure that none of the reasons described above are applicable in your case, please reconsider the virtual impossibity that logic of your program is flawed, and reexamine your code. If you are absolutely sure that your program is correct in every way, but is still not being Accepted, you may contact an Administrator (via the Clarifications feature) to rejudge or manually run your program (if it does come to that, please quote the Run ID). Note that a particular clarification can only be deleted by the team that requested them provided it not been replied to by an Administrator.`,
     },
     {
-      id: "accordion-collapse-heading-8",
       title: "How is the ranking done here?",
       content: `The primary basis for ranking teams is their score. In case the score of two teams are equal, then the team whose solution got accepted first is ranked higher. 
       Note that every incorrect submission (submitted before the first correct solution) results in a penalty minute on the time of your submission. Therefore, please avoid submitting programs unless you are reasonably sure they will work.`,
     },
     {
-      id: "accordion-collapse-heading-9",
       title: "What are the different Contest modes you mentioned before?",
       content: `The different Contest Modes mentioned earlier are described below :
 
@@ -112,55 +104,18 @@ export const FQA = () => {
     },
   ];
 
-  const [activeAccordion, setActiveAccordion] = useState(null);
-
-  const handleAccordionClick = (id) => {
-    setActiveAccordion(activeAccordion === id ? null : id);
-  };
-
   return (
-    <div id="accordion-collapse" data-accordion="collapse">
-      {accordionData.map((item) => (
-        <div key={item.id}>
-          <h2 id={item.id}>
-            <button
-              type="button"
-              className="flex items-center focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 justify-between p-5 w-full font-medium text-left border border-gray-200 dark:border-gray-700 border-b-0 text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-t-xl"
-              onClick={() => handleAccordionClick(item.id)}
-              aria-expanded={activeAccordion === item.id}
-              aria-controls={`accordion-collapse-body-${item.id}`}
-            >
-              <span>{item.title}</span>
-              <svg
-                data-accordion-icon
-                className={`w-6 h-6 shrink-0 ${
-                  activeAccordion === item.id ? "rotate-180" : ""
-                }`}
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                  clipRule="evenodd"
-                ></path>
-              </svg>
-            </button>
-          </h2>
-          <div
-            id={`accordion-collapse-body-${item.id}`}
-            className={`p-5 border border-gray-200 dark:border-gray-700 dark:bg-gray-900 border-b-0 ${
-              activeAccordion === item.id ? "" : "hidden"
-            }`}
-            aria-labelledby={item.id}
-          >
-            <p className="mb-2 text-gray-500 dark:text-gray-400">
+    <Accordion>
+      {accordionData.map((item, index) => (
+        <Accordion.Panel key={index}>
+          <Accordion.Title className="text-center">{item.title}</Accordion.Title>
+          <Accordion.Content>
+            <p className="mb-2 text-gray-500 dark:text-gray-400 text-center text-justify">
               {item.content}
             </p>
-          </div>
-        </div>
+          </Accordion.Content>
+        </Accordion.Panel>
       ))}
-    </div>
+    </Accordion>
   );
 };

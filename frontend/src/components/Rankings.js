@@ -8,7 +8,7 @@ export const Rankings = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/groups");
+        const response = await axios.get("http://localhost:5004/groups");
         setGroups(response.data.groups);
       } catch (error) {
         console.error(error);
@@ -17,7 +17,7 @@ export const Rankings = () => {
   
     const fetchDataTeams = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/teams`);
+        const response = await axios.get(`http://localhost:5001/teams`);
         setTeams(response.data.teams);
       } catch (error) {
         console.error(error);

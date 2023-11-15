@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom"; // Importa useParams
+import { useParams } from "react-router-dom";
 import axios from "axios";
+import { Table } from "flowbite-react";
 
 export const Problem = () => {
   const { id } = useParams();
@@ -8,8 +9,10 @@ export const Problem = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/problem/${id}`)
+      .get(`http://localhost:5003/problem/${id}`)
       .then((response) => {
+        console.log(response.data);
+        console.log(typeof response.data);
         setProblemDetails(response.data);
       })
       .catch((error) => {
@@ -20,23 +23,42 @@ export const Problem = () => {
   return (
     <div className="border border-gray-200 rounded-lg shadow">
       <div className="relative overflow-x-auto p-4">
-        <h2 className="text-2xl font-bold mb-4 text-center">Problem Details</h2>
         {problemDetails ? (
-          <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-            <tbody>
-              {Object.keys(problemDetails).map((key) => (
-                <tr key={key} className="bg-white dark:bg-gray-800">
-                  <th
-                    scope="row"
-                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                  >
-                    {key}
-                  </th>
-                  <td className="px-6 py-4">{problemDetails[key]}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <>
+            <h2 className="text-2xl font-bold mb-4 text-center">Problem Details: {problemDetails.name} </h2>
+            <Table>
+              <Table.Body>
+                <Table.Row>
+                  <Table.Cell>Problem ID</Table.Cell>
+                  <Table.Cell>{problemDetails.pid}</Table.Cell>
+                  <Table.Cell>Input File Size</Table.Cell>
+                  <Table.Cell>{/* Input file size data here */}</Table.Cell>
+                  <Table.Cell>Submissions</Table.Cell>
+                  <Table.Cell>{/* Submissions data here */}</Table.Cell>
+                </Table.Row>
+                <Table.Row>
+                  <Table.Cell>Problem Code</Table.Cell>
+                  <Table.Cell>{problemDetails.code}</Table.Cell>
+                  <Table.Cell>Time Limit</Table.Cell>
+                  <Table.Cell>{problemDetails.timelimit}</Table.Cell>
+                  <Table.Cell>Points</Table.Cell>
+                  <Table.Cell>{problemDetails.score}</Table.Cell>
+                </Table.Row>
+                <Table.Row>
+                  <Table.Cell>Problem Statement</Table.Cell>
+                  <Table.Cell colSpan="5">{problemDetails.statement}</Table.Cell>
+                </Table.Row>
+                <Table.Row>
+                  <Table.Cell>Input</Table.Cell>
+                  <Table.Cell colSpan="5">{problemDetails.input}</Table.Cell>
+                </Table.Row>
+                <Table.Row>
+                  <Table.Cell>Output</Table.Cell>
+                  <Table.Cell colSpan="5">{problemDetails.output}</Table.Cell>
+                </Table.Row>
+              </Table.Body>
+            </Table>
+          </>
         ) : (
           <div
             role="status"

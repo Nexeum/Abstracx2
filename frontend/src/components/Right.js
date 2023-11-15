@@ -59,7 +59,7 @@ export const RightComponent = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/status")
+      .get("http://localhost:5005/status")
       .then((response) => {
         setServerStatus(response.data.status);
         setServerVersion(response.data.version);

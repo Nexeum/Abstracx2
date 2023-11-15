@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { Table, Spinner, Card } from 'flowbite-react';
 
 export const Account = () => {
   const [oldPassword, setOldPassword] = useState("");
@@ -50,7 +51,7 @@ export const Account = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/team-details", {
+      .get("http://localhost:5001/team-details", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -65,92 +66,57 @@ export const Account = () => {
   }, [token]);
 
   return (
-    <div className="w-full text-center bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
-      <div className="items-center justify-center space-y-4 sm:flex sm:space-y-0 sm:space-x-4">
-        <div className="relative overflow-x-auto">
-          <h5 className="mb-2 text-3xl font-bold text-gray-900 dark:text-white p-4">
-            Team Details
-          </h5>
-          {teamDetails ? (
-            <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-              <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                <tr>
-                  <th scope="col" className="px-6 py-3">
-                    Team
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Email Address
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Platform
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {teamDetails.map((team) => (
-                  <tr className="bg-white" key={team.tid}>
-                    <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                      {team.status || "Not Specified"}
-                    </td>
-                    <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                      {team.teamname || "Not Specified"}
-                    </td>
-                    <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                      {team.platform || "Not Specified"}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          ) : (
-            <div
-              role="status"
-              className="w-full p-4 space-y-4 border border-gray-200 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 dark:border-gray-700 mx-auto"
-            >
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
-                  <div className="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+    <div className="flex flex-col justify-center items-center">
+      <Card href="#" className="w-full mb-8 border-0">
+        <h5 className="mb-2 text-3xl font-bold text-gray-900 dark:text-white p-4 text-center">
+          Team Details
+        </h5>
+        {teamDetails ? (
+          <Table>
+            <Table.Head>
+              <Table.HeadCell>Team</Table.HeadCell>
+              <Table.HeadCell>Email Address</Table.HeadCell>
+              <Table.HeadCell>Platform</Table.HeadCell>
+            </Table.Head>
+            <Table.Body className="divide-y">
+              {teamDetails.map((team) => (
+                <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800" key={team.tid}>
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                    {team.status || "Not Specified"}
+                  </Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                    {team.teamname || "Not Specified"}
+                  </Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                    {team.platform || "Not Specified"}
+                  </Table.Cell>
+                </Table.Row>
+              ))}
+            </Table.Body>
+          </Table>
+        ) : (
+          <div class="shadow rounded-md p-4 max-w-sm w-full mx-auto">
+            <div class="animate-pulse flex space-x-4">
+              <div class="rounded-full bg-slate-700 h-10 w-10"></div>
+              <div class="flex-1 space-y-6 py-1">
+                <div class="h-2 bg-slate-700 rounded"></div>
+                <div class="space-y-3">
+                  <div class="grid grid-cols-3 gap-4">
+                    <div class="h-2 bg-slate-700 rounded col-span-2"></div>
+                    <div class="h-2 bg-slate-700 rounded col-span-1"></div>
+                  </div>
+                  <div class="h-2 bg-slate-700 rounded"></div>
                 </div>
-                <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
               </div>
-              <div className="flex items-center justify-between pt-4">
-                <div>
-                  <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
-                  <div className="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
-                </div>
-                <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
-              </div>
-              <div className="flex items-center justify-between pt-4">
-                <div>
-                  <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
-                  <div className="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
-                </div>
-                <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
-              </div>
-              <div className="flex items-center justify-between pt-4">
-                <div>
-                  <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
-                  <div className="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
-                </div>
-                <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
-              </div>
-              <div className="flex items-center justify-between pt-4">
-                <div>
-                  <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
-                  <div className="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
-                </div>
-                <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
-              </div>
-              <span className="sr-only">Loading...</span>
             </div>
-          )}
-        </div>
-      </div>
-      <h5 className="mb-2 text-3xl font-bold text-gray-900 dark:text-white p-4">
-        Set Password
-      </h5>
-      <div className="items-center justify-center space-y-4 sm:flex sm:space-y-0 sm:space-x-4">
+          </div>
+        )}
+      </Card>
+
+      <Card href="#" className="w-full border-0">
+        <h5 className="mb-2 text-3xl font-bold text-gray-900 dark:text-white p-4 text-center">
+          Set Password
+        </h5>
         <form onSubmit={handleChangePassword}>
           <div className="mb-6">
             <label
@@ -200,14 +166,16 @@ export const Account = () => {
               required
             />
           </div>
-          <button
-            type="submit"
-            className="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover-bg-blue-500 dark:focus:ring-blue-800"
-          >
-            Change Password
-          </button>
+          <div className="flex justify-center">
+            <button
+              type="submit"
+              className="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800"
+            >
+              Change Password
+            </button>
+          </div>
         </form>
-      </div>
+      </Card>
     </div>
   );
 };
